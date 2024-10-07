@@ -30,7 +30,6 @@ def main() -> None:
 
     st.title("Pneumonia Admission Predictor")
 
-    # TODO: Author names
     st.html(
         "<p style='font-style: italic; margin-top: -15px;'>"
         + "Jan Maverick M. Juat, Dionmelle J. Pardilla,"
@@ -38,9 +37,8 @@ def main() -> None:
     )
     st.markdown("---")
 
-    # TODO: Description
-    st.write("""
-
+    st.markdown("""
+        Hybrid approach predictor model using Random Forest Integrated with Active SMOTE to predict pneumonia admissions
     """)
 
     st.number_input(
