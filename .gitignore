@@ -1,0 +1,22 @@
+# Python-related
+__pycache__/
+.venv/
+venv/
+.ipynb_checkpoints/
+pyrightconfig.json
+
+# IDE configurations
+.vscode/
+.idea/
+
+# Gradio
+flagged/
+
+# Testing files
+testing/
+
+# Logs
+logs.txt
+
+# datasets
+.parquet
