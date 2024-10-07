@@ -89,13 +89,10 @@ rf_as.display_results("acc")  # Print results [acc (Accuracy), min (Minority), m
 Open the app by running
 
 ```bash
-python app.py
-
-# or this command for hot-reloading
 streamlit run app.py
 ```
 
-The web app will become accessible at http://127.0.0.1:7860 (http://127.0.0.1:7860?__theme=light for light theme)
+The web app will become accessible at http://localhost:8502.
 
 ## License
 
