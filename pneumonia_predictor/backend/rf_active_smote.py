@@ -19,6 +19,7 @@ class RfActiveSMOTE(ActiveSMOTE):
         X_test: DataFrame,
         y_test: DataFrame,
         target_name: str,
+        num_est: int = N_ESTIMATORS,
         num_clusters: int = 4,
         sampling_ratio: float = 0.25,
         update_sampratio_per_iter: bool = False,
@@ -32,7 +33,7 @@ class RfActiveSMOTE(ActiveSMOTE):
         self.X_test = X_test
         self.y_test = y_test
 
-        self.classifier = RandomForestClassifier()
+        self.classifier = RandomForestClassifier(n_estimators=num_est, random_state=42)
         # stores all synthetic samples throughout the iteration
         self.total_synthetic_samples = DataFrame()
 
@@ -74,7 +75,7 @@ class RfActiveSMOTE(ActiveSMOTE):
             self.record_curr_iteration()
         self.log("inf", "Retraining done")
 
-    def fit_classifier(self, num_est: int = N_ESTIMATORS):
+    def fit_classifier(self):
         self.log("op", "Process classifier.fit started")
         self.classifier.fit(
             self.X_train_resampled,
