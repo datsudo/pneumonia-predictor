@@ -63,6 +63,23 @@ pre-commit install
 
 ## Running
 
+### Sample usage
+
+``` python
+from pneumonia_predictor.backend.rf_active_smote import RfActiveSMOTE()
+
+# Create an RFActiveSMOTE instance
+rf_as = RfActiveSMOTE(X_train, y_train, X_test, y_test, "target_column_name")
+
+# Training
+rf_as.smote.train(n_iterations=5)
+
+# Other options
+rf_as.save("model_name")  # will save the model at ./saved_models/model_name.pkl
+
+rf_as.display_results("acc")  # Print results [acc (Accuracy), min (Minority), maj (Majority), avg (Weighted Average)]
+```
+
 ### Training
 
 > *TODO: training instructions*
