@@ -92,7 +92,7 @@ Open the app by running
 python app.py
 
 # or this command for hot-reloading
-gradio app.py
+streamlit run app.py
 ```
 
 The web app will become accessible at http://127.0.0.1:7860 (http://127.0.0.1:7860?__theme=light for light theme)
