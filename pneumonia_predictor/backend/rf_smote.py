@@ -95,3 +95,6 @@ class RfSMOTE(Logger):
     def init_stats(self) -> None:
         self.X_train_resampled = self.X_train.copy()
         self.y_train_resampled = self.y_train.copy()
+
+    def __str__(self) -> None:
+        return "Random Forest + SMOTE Model"

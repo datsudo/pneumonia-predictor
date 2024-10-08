@@ -154,3 +154,6 @@ class RfActiveSMOTE(ActiveSMOTE):
         models_path.mkdir(exist_ok=True)
         joblib.dump(self.classifier, f"{SAVED_MODELS_PATH}/{model_name}.pkl")
         self.log("inf", f"Pickle {model_name}.pkl saved at ./{SAVED_MODELS_PATH}")
+
+    def __str__(self) -> str:
+        return "Random Forest + Active SMOTE Model"
