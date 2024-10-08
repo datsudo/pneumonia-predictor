@@ -51,6 +51,8 @@ class RfSMOTE(Logger):
         self.log("op", "Process classifier.predict started")
         self.y_pred = self.classifier.predict(self.X_test)
         self.report = classification_report(self.y_test, self.y_pred, output_dict=True)
+        self.overall_accuracy = self.report["accuracy"]
+        self.overall_weighted_avg = self.report["weighted avg"]
         self.log("op", "Classification report generated")
 
     def create_synthetic_samples(self) -> None:

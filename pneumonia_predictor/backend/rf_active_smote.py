@@ -1,3 +1,5 @@
+import statistics
+
 from collections import defaultdict
 from pathlib import Path
 
@@ -73,6 +75,7 @@ class RfActiveSMOTE(ActiveSMOTE):
             self.fit_classifier()
 
             self.record_curr_iteration()
+        self.record_overall_res()
         self.log("inf", "Retraining done")
 
     def fit_classifier(self):
@@ -99,6 +102,14 @@ class RfActiveSMOTE(ActiveSMOTE):
             self.weighted_avg[metric].append(
                 self.current_report["weighted avg"][metric]
             )
+
+    def record_overall_res(self) -> None:
+        self.overall_weighted_avg = {
+            "precision": statistics.fmean(self.weighted_avg["precision"]),
+            "recall": statistics.fmean(self.weighted_avg["recall"]),
+            "f1-score": statistics.fmean(self.weighted_avg["f1-score"]),
+        }
+        self.overall_accuracy = statistics.fmean(self.accuracy_stats)
 
     def display_results(self, opt: str) -> None:
         if opt not in {"acc", "min", "maj", "avg"}:
