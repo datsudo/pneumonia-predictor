@@ -3,9 +3,8 @@ title: Pneumonia Predictor
 emoji: 🚀
 colorFrom: blue
 colorTo: indigo
-sdk: streamlit
-sdk_version: 1.25.0
-app_file: app.py
+sdk: docker
+app_port: 8501
 pinned: false
 license: gpl-3.0
 ---
