@@ -26,6 +26,7 @@ class RfSMOTE(Logger):
         self.y_train = y_train
         self.X_test = X_test
         self.y_test = y_test
+
         self.X_train_resampled = X_train.copy()
         self.y_train_resampled = y_train.copy()
 
@@ -88,3 +89,7 @@ class RfSMOTE(Logger):
         self.min_maj_count = Counter(
             self.y_train_resampled[self.target_name].to_numpy()
         )
+
+    def init_stats(self) -> None:
+        self.X_train_resampled = self.X_train.copy()
+        self.y_train_resampled = self.y_train.copy()

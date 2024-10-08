@@ -131,6 +131,8 @@ class RfActiveSMOTE(ActiveSMOTE):
             )
 
     def init_stats(self) -> None:
+        self.probabilities = []
+        self.total_synthetic_samples = DataFrame()
         self.min_class_stats = defaultdict(list)
         self.maj_class_stats = defaultdict(list)
         self.weighted_avg = defaultdict(list)
