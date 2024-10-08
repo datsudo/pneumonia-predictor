@@ -19,7 +19,7 @@ def predict(new_data: pd.DataFrame) -> None:
 
         result = pd.DataFrame(
             {
-                "Prediction": ["Low Risk", "High Risk"],
+                "Prediction": ["Low", "High"],
                 "Percentage (%)": [
                     round(probabilities[0] * 100, 2),
                     round(probabilities[1] * 100, 2),
@@ -28,7 +28,8 @@ def predict(new_data: pd.DataFrame) -> None:
         )
         result = result.set_index("Prediction")
 
-        st.bar_chart(result, y_label="Risk Percentage (%)")
+        with st.container(border=True):
+            st.bar_chart(result, y_label="Risk Percentage (%)")
 
 
 def format_input(session, columns: list[str]) -> pd.DataFrame:
@@ -80,25 +81,35 @@ def main() -> None:
     with col1:
         with st.container(border=True):
             st.subheader("Input Fields", divider=True)
-            st.number_input(
-                "**Age** (must be between 18-65 years)",
-                key="age",
-                min_value=18,
-                max_value=65,
-            )
-            st.radio("Sex", key="sex", options=["Male", "Female"], captions=["0", "1"])
-            st.write(
-                "Indicate whether the patient has any of the following conditions:"
-            )
-            conditions = {
-                "crd": "Chronic respiratory disease",
-                "dm": "Diabetes mellitus",
-                "hf": "Heart failure",
-                "cn": "Cancer",
-                "ckd": "Chronic kidney disease",
-            }
-            for cond in conditions:
-                st.checkbox(label=conditions[cond], key=cond)
+
+            with st.container(border=True):
+                st.number_input(
+                    "**Age** (must be between 18-65 years)",
+                    key="age",
+                    min_value=18,
+                    max_value=65,
+                )
+            with st.container(border=True):
+                st.radio(
+                    "**Sex**",
+                    key="sex",
+                    options=["Male", "Female"],
+                    captions=["0", "1"],
+                    horizontal=True,
+                )
+            with st.container(border=True):
+                st.write(
+                    "**Indicate whether the patient has any of the following conditions:**"
+                )
+                conditions = {
+                    "crd": "Chronic respiratory disease",
+                    "dm": "Diabetes mellitus",
+                    "hf": "Heart failure",
+                    "cn": "Cancer",
+                    "ckd": "Chronic kidney disease",
+                }
+                for cond in conditions:
+                    st.checkbox(label=conditions[cond], key=cond)
 
     with col2:
         X_input = format_input(
