@@ -82,7 +82,6 @@ patool==3.0.0
 pexpect==4.9.0
 pillow==10.4.0
 platformdirs==4.3.6
--e git+ssh://git@github.com/datsudo/pneumonia-predictor.git@3a447a80078166cdaef5d0129184d08a56aa4700#egg=pneumonia_predictor
 pre-commit==3.8.0
 prettytable==3.11.0
 prometheus_client==0.21.0
