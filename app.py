@@ -7,65 +7,31 @@ PREDICTOR = joblib.load("saved_models/pneumonia_predictor.pkl")
 
 
 def predict(new_data: pd.DataFrame) -> None:
-    prediction = PREDICTOR.predict(new_data)
-    probabilities = PREDICTOR.predict_proba(new_data)
+    prediction = PREDICTOR.predict(new_data)[0]
+    probabilities = PREDICTOR.predict_proba(new_data)[0]
 
-    if prediction[0] == 0:
-        st.markdown("**LOW RISK**:")
-    else:
-        st.write("HIGH RISK")
+    with st.container(border=True):
+        st.subheader("Result", divider=True)
+        if prediction == 0:
+            st.success(":green[**LOW RISK**]")
+        else:
+            st.error("**HIGH RISK**")
 
-    st.markdown(f"""
-    - Prediction: {prediction[0]}
-    - Probabilities:
-        - Low risk: {probabilities[0][0]}
-        - High risk: {probabilities[0][1]}
-    """)
+        result = pd.DataFrame(
+            {
+                "Prediction": ["Low Risk", "High Risk"],
+                "Percentage (%)": [
+                    round(probabilities[0] * 100, 2),
+                    round(probabilities[1] * 100, 2),
+                ],
+            }
+        )
+        result = result.set_index("Prediction")
+
+        st.bar_chart(result, y_label="Risk Percentage (%)")
 
 
-def main() -> None:
-    st.set_page_config(
-        page_title="Pneumonia Admission Predictor",
-    )
-
-    st.title("Pneumonia Admission Predictor")
-
-    st.html(
-        "<p style='font-style: italic; margin-top: -15px;'>"
-        + "Jan Maverick M. Juat, Dionmelle J. Pardilla,"
-        + "Sthanly Paul L. Malapit, Darylle P. Villanueva</p>"
-    )
-    st.markdown("---")
-
-    st.markdown("""
-        Hybrid approach predictor model using Random Forest Integrated with Active SMOTE to predict pneumonia admissions
-    """)
-
-    st.number_input(
-        "Age (must be between 18-65 years)",
-        key="age",
-        min_value=18,
-        max_value=65,
-    )
-
-    st.markdown("---")
-
-    st.radio("Sex", key="sex", options=["Male", "Female"], captions=["0", "1"])
-
-    st.markdown("---")
-
-    st.write("Indicate whether the patient has any of the following conditions:")
-    conditions = {
-        "crd": "Chronic respiratory disease",
-        "dm": "Diabetes mellitus",
-        "hf": "Heart failure",
-        "cn": "Cancer",
-        "ckd": "Chronic kidney disease",
-    }
-    for cond in conditions:
-        st.checkbox(label=conditions[cond], key=cond)
-
-    # You can access the value at any point with:
+def format_input(session, columns: list[str]) -> pd.DataFrame:
     user_input = [
         st.session_state.age,
         0 if st.session_state.sex == "Male" else 1,
@@ -84,30 +50,71 @@ def main() -> None:
             )
         )
     )
-
-    X_new = pd.DataFrame(
+    user_input = pd.DataFrame(
         [user_input],
-        columns=[
-            "age",
-            "sex",
-            "chronic_respiratory_disease",
-            "diabetes_mellitus",
-            "heart_failure",
-            "cancer",
-            "chronic_kidney_disease",
-        ],
+        columns,
+    )
+    return user_input
+
+
+def main() -> None:
+    st.set_page_config(
+        page_title="Pneumonia Admission Predictor",
     )
 
-    st.markdown("---")
-    st.write("Your input:")
+    st.title("Pneumonia Admission Predictor")
 
-    X_new
+    st.html(
+        "<p style='font-style: italic; margin-top: -15px;'>"
+        + "Jan Maverick M. Juat, Dionmelle J. Pardilla,"
+        + "Sthanly Paul L. Malapit, Darylle P. Villanueva</p>"
+    )
 
-    st.markdown("---")
+    st.markdown("""
+    Hybrid approach predictor model using Random Forest Integrated with Active SMOTE
+    to predict pneumonia admissions
+    """)
 
-    st.subheader("Assessment:")
+    col1, col2 = st.columns(2)
 
-    predict(X_new)
+    with col1:
+        with st.container(border=True):
+            st.subheader("Input Fields", divider=True)
+            st.number_input(
+                "**Age** (must be between 18-65 years)",
+                key="age",
+                min_value=18,
+                max_value=65,
+            )
+            st.radio("Sex", key="sex", options=["Male", "Female"], captions=["0", "1"])
+            st.write(
+                "Indicate whether the patient has any of the following conditions:"
+            )
+            conditions = {
+                "crd": "Chronic respiratory disease",
+                "dm": "Diabetes mellitus",
+                "hf": "Heart failure",
+                "cn": "Cancer",
+                "ckd": "Chronic kidney disease",
+            }
+            for cond in conditions:
+                st.checkbox(label=conditions[cond], key=cond)
+
+    with col2:
+        X_input = format_input(
+            st.session_state,
+            [
+                "age",
+                "sex",
+                "chronic_respiratory_disease",
+                "diabetes_mellitus",
+                "heart_failure",
+                "cancer",
+                "chronic_kidney_disease",
+            ],
+        )
+
+        predict(X_input)
 
 
 if __name__ == "__main__":
