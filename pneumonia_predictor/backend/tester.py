@@ -1,4 +1,5 @@
 from pathlib import Path
+from collections import defaultdict
 
 import pandas as pd
 from scipy.stats import ttest_rel
@@ -14,8 +15,10 @@ class ModelTester(Logger):
         self.metrics = ["accuracy", "precision", "recall", "f1-score"]
 
     def run_tests(self, num_tests: int) -> None:
-        self.model_a_tests = []  # acc, prec, rec, f1
-        self.model_b_tests = []
+        self.a_tests_arr = []  # acc, prec, rec, f1
+        self.b_tests_arr = []
+        self.a_tests_per_metric = defaultdict(list)
+        self.b_tests_per_metric = defaultdict(list)
 
         for t in range(num_tests):
             self.log("sep", "=")
@@ -23,32 +26,43 @@ class ModelTester(Logger):
 
             self.log("op", f"Training Started: {str(self.model_a)}")
             self.model_a.train()
-            self.model_a_tests.append(self.parse_test_res(self.model_a, t))
+            self.a_tests_arr.append(self.parse_res_per_test(self.model_a, t))
 
             self.log("inf", f"Training Started: {str(self.model_b)}")
             self.model_b.train()
-            self.model_b_tests.append(self.parse_test_res(self.model_b, t))
+            self.b_tests_arr.append(self.parse_res_per_test(self.model_b, t))
+
+            self.store_res_per_metric()
 
         self.generate_final_res()
 
-    def parse_test_res(self, model, n_test: int) -> list[float]:
-        test_result = [
+    def parse_res_per_test(self, model, n_test: int) -> list[float]:
+        test_res_arr = [
             n_test + 1,
             model.overall_accuracy,
             model.overall_weighted_avg["precision"],
             model.overall_weighted_avg["recall"],
             model.overall_weighted_avg["f1-score"],
         ]
-        return test_result
+        return test_res_arr
+
+    def store_res_per_metric(self) -> None:
+        for m in self.metrics:
+            if m == "accuracy":
+                self.a_tests_per_metric[m].append(self.model_a.overall_accuracy)
+                self.b_tests_per_metric[m].append(self.model_b.overall_accuracy)
+            else:
+                self.a_tests_per_metric[m].append(self.model_a.overall_weighted_avg[m])
+                self.b_tests_per_metric[m].append(self.model_b.overall_weighted_avg[m])
 
     def generate_final_res(self) -> None:
         self.model_a_res = pd.DataFrame(
-            self.model_a_tests, columns=["Test", *self.metrics]
+            self.a_tests_arr, columns=["Test", *self.metrics]
         )
         self.model_a_res["Average"] = self.model_a_res[self.metrics].mean(axis=1)
 
         self.model_b_res = pd.DataFrame(
-            self.model_b_tests, columns=["Test", *self.metrics]
+            self.b_tests_arr, columns=["Test", *self.metrics]
         )
         self.model_b_res["Average"] = self.model_b_res[self.metrics].mean(axis=1)
 
@@ -69,12 +83,19 @@ class ModelTester(Logger):
         }
 
         self.compare_res = pd.DataFrame(res)
-        t_values, p_values = ttest_rel(
-            self.compare_res[str(self.model_a)].values,
-            self.compare_res[str(self.model_b)].values,
-        )
-        self.compare_res["t-value"] = t_values
-        self.compare_res["p-value"] = p_values
+        self.t_values, self.p_values = self.get_ttest_res()
+        self.compare_res["t-value"] = self.t_values
+        self.compare_res["p-value"] = self.p_values
+
+    def get_ttest_res(self) -> tuple[list[float], list[float]]:
+        t_values = []
+        p_values = []
+        for m in self.metrics:
+            self.log("op", "Computing t-values and p-values")
+            res = ttest_rel(self.a_tests_per_metric[m], self.b_tests_per_metric[m])
+            t_values.append(res.statistic)
+            p_values.append(res.pvalue)
+        return t_values, p_values
 
     def save_result(self, location: str = "results") -> None:
         result_path = Path(f"{location}")
