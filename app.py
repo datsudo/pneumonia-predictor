@@ -3,12 +3,13 @@ import pandas as pd
 import joblib
 
 
-PREDICTOR = joblib.load("saved_models/pneumonia_predictor.pkl")
+PREDICTOR_RF_SMOTE = joblib.load("saved_models/pneumonia_predictor_rfsmote.pkl")
+PREDICTOR_RF_ACTIVE_SMOTE = joblib.load("saved_models/pneumonia_predictor.pkl")
 
 
-def predict(new_data: pd.DataFrame) -> None:
-    prediction = PREDICTOR.predict(new_data)[0]
-    probabilities = PREDICTOR.predict_proba(new_data)[0]
+def predict(model, new_data: pd.DataFrame) -> None:
+    prediction = model.predict(new_data)[0]
+    probabilities = model.predict_proba(new_data)[0]
 
     with st.container(border=True):
         st.subheader("Result", divider=True)
@@ -29,7 +30,7 @@ def predict(new_data: pd.DataFrame) -> None:
         result = result.set_index("Prediction")
 
         with st.container(border=True):
-            st.bar_chart(result, y_label="Risk Percentage (%)")
+            st.bar_chart(result, y_label="Risk Percentage (%)", color=["#0f0"])
 
 
 def format_input(session, columns: list[str]) -> pd.DataFrame:
@@ -76,56 +77,71 @@ def main() -> None:
     to predict pneumonia admissions
     """)
 
-    col1, col2 = st.columns(2)
-
-    with col1:
-        with st.container(border=True):
-            st.subheader("Input Fields", divider=True)
-
-            with st.container(border=True):
-                st.number_input(
-                    "**Age** (must be between 18-65 years)",
-                    key="age",
-                    min_value=18,
-                    max_value=65,
-                )
-            with st.container(border=True):
-                st.radio(
-                    "**Sex**",
-                    key="sex",
-                    options=["Male", "Female"],
-                    captions=["0", "1"],
-                    horizontal=True,
-                )
-            with st.container(border=True):
-                st.write(
-                    "**Indicate whether the patient has any of the following conditions:**"
-                )
-                conditions = {
-                    "crd": "Chronic respiratory disease",
-                    "dm": "Diabetes mellitus",
-                    "hf": "Heart failure",
-                    "cn": "Cancer",
-                    "ckd": "Chronic kidney disease",
-                }
-                for cond in conditions:
-                    st.checkbox(label=conditions[cond], key=cond)
-
-    with col2:
-        X_input = format_input(
-            st.session_state,
-            [
-                "age",
-                "sex",
-                "chronic_respiratory_disease",
-                "diabetes_mellitus",
-                "heart_failure",
-                "cancer",
-                "chronic_kidney_disease",
-            ],
+    with st.container(border=True):
+        st.subheader("Choose Model", divider=True)
+        st.radio(
+            "**Model**",
+            key="chosen_model",
+            options=["Rf-SMOTE", "Rf-ActiveSMOTE"],
+            horizontal=True,
         )
 
-        predict(X_input)
+    with st.container(border=True):
+        col1, col2 = st.columns(2)
+
+        with col1:
+            with st.container(border=True):
+                st.subheader("Input Fields", divider=True)
+
+                with st.container(border=True):
+                    st.number_input(
+                        "**Age** (must be between 18-65 years)",
+                        key="age",
+                        min_value=18,
+                        max_value=65,
+                    )
+                with st.container(border=True):
+                    st.radio(
+                        "**Sex**",
+                        key="sex",
+                        options=["Male", "Female"],
+                        captions=["0", "1"],
+                        horizontal=True,
+                    )
+                with st.container(border=True):
+                    st.write(
+                        "**Indicate whether the patient has any of the following conditions:**"
+                    )
+                    conditions = {
+                        "crd": "Chronic respiratory disease",
+                        "dm": "Diabetes mellitus",
+                        "hf": "Heart failure",
+                        "cn": "Cancer",
+                        "ckd": "Chronic kidney disease",
+                    }
+                    for cond in conditions:
+                        st.checkbox(label=conditions[cond], key=cond)
+
+        with col2:
+            X_input = format_input(
+                st.session_state,
+                [
+                    "age",
+                    "sex",
+                    "chronic_respiratory_disease",
+                    "diabetes_mellitus",
+                    "heart_failure",
+                    "cancer",
+                    "chronic_kidney_disease",
+                ],
+            )
+
+            if st.session_state.chosen_model == "Rf-SMOTE":
+                model = PREDICTOR_RF_SMOTE
+            else:
+                model = PREDICTOR_RF_ACTIVE_SMOTE
+
+            predict(model, X_input)
 
 
 if __name__ == "__main__":
