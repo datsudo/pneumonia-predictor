@@ -1,12 +1,12 @@
 from collections import Counter
 
-from pandas import DataFrame, concat
 from imblearn.over_sampling import SMOTE
+from pandas import DataFrame, concat
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 
-from pneumonia_predictor.config import N_ESTIMATORS
 from pneumonia_predictor.backend.logger import Logger
+from pneumonia_predictor.config import N_ESTIMATORS
 
 
 class RfSMOTE(Logger):

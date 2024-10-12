@@ -1,7 +1,6 @@
-import streamlit as st
-import pandas as pd
 import joblib
-
+import pandas as pd
+import streamlit as st
 
 PREDICTOR_RF_SMOTE = joblib.load("saved_models/pneumonia_predictor_rfsmote.pkl")
 PREDICTOR_RF_ACTIVE_SMOTE = joblib.load("saved_models/pneumonia_predictor.pkl")

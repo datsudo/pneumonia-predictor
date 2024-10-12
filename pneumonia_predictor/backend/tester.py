@@ -1,5 +1,5 @@
-from pathlib import Path
 from collections import defaultdict
+from pathlib import Path
 
 import pandas as pd
 from scipy.stats import ttest_rel
