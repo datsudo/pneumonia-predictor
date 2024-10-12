@@ -1,5 +1,4 @@
 import statistics
-
 from collections import defaultdict
 from pathlib import Path
 
@@ -10,7 +9,13 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 
 from pneumonia_predictor.backend.active_smote import ActiveSMOTE
-from pneumonia_predictor.config import N_ESTIMATORS, N_ITERATIONS, SAVED_MODELS_PATH
+from pneumonia_predictor.config import (
+    N_CLUSTERS,
+    N_ESTIMATORS,
+    N_ITERATIONS,
+    SAMPLING_RATIO,
+    SAVED_MODELS_PATH,
+)
 
 
 class RfActiveSMOTE(ActiveSMOTE):
@@ -22,8 +27,8 @@ class RfActiveSMOTE(ActiveSMOTE):
         y_test: DataFrame,
         target_name: str,
         num_est: int = N_ESTIMATORS,
-        num_clusters: int = 4,
-        sampling_ratio: float = 0.25,
+        num_clusters: int = N_CLUSTERS,
+        sampling_ratio: float = SAMPLING_RATIO,
         update_sampratio_per_iter: bool = False,
     ) -> None:
         self.probabilities = []
