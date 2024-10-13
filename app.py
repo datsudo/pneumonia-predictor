@@ -53,7 +53,7 @@ def format_input(session, columns: list[str]) -> pd.DataFrame:
     )
     user_input = pd.DataFrame(
         [user_input],
-        columns,
+        columns=columns,
     )
     return user_input
 
