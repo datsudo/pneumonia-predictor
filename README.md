@@ -19,6 +19,8 @@ license: gpl-3.0
 
 </div>
 
+Documentation: https://datsudo.github.io/pneumonia-predictor/
+
 ## Setup
 
 Install the following prerequisites:
@@ -78,10 +80,6 @@ rf_as.save("model_name")  # will save the model at ./saved_models/model_name.pkl
 
 rf_as.display_results("acc")  # Print results [acc (Accuracy), min (Minority), maj (Majority), avg (Weighted Average)]
 ```
-
-### Training
-
-> *TODO: training instructions*
 
 ### Web app
 
