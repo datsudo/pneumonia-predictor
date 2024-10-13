@@ -1,0 +1,29 @@
+site_name: Pneumonia Admission Predictor
+nav:
+    - Home: index.md
+    - Getting Started:
+        - Setup: getting-started/setup.md
+        - Model Usage: getting-started/model-usage.md
+    - API Reference:
+        - Index: api-reference/index.md
+        - RfActiveSMOTE: api-reference/rf-active-smote.md
+        - RfSMOTE: api-reference/rf-smote.md
+    - About:
+        - About This Project: about/about-the-project.md
+        - License: about/license.md
+theme:
+    name: material
+    palette:
+        - media: "(prefers-color-scheme: light)"
+          scheme: default
+          toggle:
+              icon: material/brightness-7
+              name: Switch to dark mode
+        - media: "(prefers-color-scheme: dark)"
+          scheme: slate
+          toggle:
+              icon: material/brightness-4
+              name: Switch to light mode
+    highlightjs: true
+    features:
+        - navigation.tabs
