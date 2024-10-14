@@ -14,21 +14,33 @@ def predict(model, new_data: pd.DataFrame) -> None:
         st.subheader("Result", divider=True)
         if prediction == 0:
             st.success(":green[**LOW RISK**]")
+            st.success("""
+            You are at low risk for pneumonia admission. Keep monitoring your health
+            and follow preventive measures to stay well.
+            """)
         else:
             st.error("**HIGH RISK**")
+            st.error("""
+            Based on your information, you are at high risk for pneumonia admission.
+            Please consult with your healthcare provider for further evaluation and guidance.
+            """)
 
+        class_0_proba = round(probabilities[0] * 100, 2)
+        class_1_proba = round(probabilities[1] * 100, 2)
         result = pd.DataFrame(
             {
                 "Prediction": ["Low", "High"],
-                "Percentage (%)": [
-                    round(probabilities[0] * 100, 2),
-                    round(probabilities[1] * 100, 2),
-                ],
+                "Percentage (%)": [class_0_proba, class_1_proba],
             }
         )
         result = result.set_index("Prediction")
 
         with st.container(border=True):
+            st.subheader("Result Details")
+            st.markdown(f"""
+            Based on the predictor model's result, there's a **{class_0_proba}%** probability of
+            high risk and **{class_1_proba}%** of low risk for pneumonia admission.
+            """)
             st.bar_chart(result, y_label="Risk Percentage (%)", color=["#0f0"])
 
 
@@ -63,84 +75,137 @@ def main() -> None:
         page_title="Pneumonia Admission Predictor",
     )
 
-    st.title("Pneumonia Admission Predictor")
-
+    # header
     st.html(
-        "<p style='font-style: italic; margin-top: -15px;'>"
-        + "Jan Maverick M. Juat, Dionmelle J. Pardilla,"
-        + "Sthanly Paul L. Malapit, Darylle P. Villanueva</p>"
+        """
+        <div align="center" style="margin-top: -25px;">
+            <img style="width: 100px;" src="https://i.imgur.com/d7yYRd8.png" alt="App icon">
+            <h1>Pneumonia Admission Predictor</h1>
+            <p style="font-style: italic; margin-top: -15px;">
+                Jan Maverick M. Juat, Dionmelle J. Pardilla
+                Sthanly Paul L. Malapit, Darylle P. Villanueva
+            </p>
+        </div>
+        """
     )
 
-    st.markdown("""
-    Hybrid approach predictor model using Random Forest Integrated with Active SMOTE
-    to predict pneumonia admissions
-    """)
+    tab1, tab2, tab3 = st.tabs(["About", "Local Setup", "Predict"])
 
-    with st.container(border=True):
-        st.subheader("Choose Model", divider=True)
-        st.radio(
-            "**Model**",
-            key="chosen_model",
-            options=["Rf-SMOTE", "Rf-ActiveSMOTE"],
-            horizontal=True,
-        )
+    with tab1:
+        st.subheader("About this project")
+        st.markdown("""
+        This app helps predict the likelihood of hospital admission for patients
+        with pneumonia. By analyzing key medical indicators and patient data, it
+        provides healthcare professionals with insights to make more informed decisions,
+        optimizing patient care and resource allocation.
 
-    with st.container(border=True):
-        col1, col2 = st.columns(2)
+        For predictor, we provided two machine learning models:
 
-        with col1:
-            with st.container(border=True):
-                st.subheader("Input Fields", divider=True)
+        - `RfActiveSMOTE`, and
+        - `RfSMOTE`
 
-                with st.container(border=True):
-                    st.number_input(
-                        "**Age** (must be between 18-65 years)",
-                        key="age",
-                        min_value=18,
-                        max_value=65,
-                    )
-                with st.container(border=True):
-                    st.radio(
-                        "**Sex**",
-                        key="sex",
-                        options=["Male", "Female"],
-                        captions=["0", "1"],
-                        horizontal=True,
-                    )
-                with st.container(border=True):
-                    st.write(
-                        "**Indicate whether the patient has any of the following conditions:**"
-                    )
-                    conditions = {
-                        "crd": "Chronic respiratory disease",
-                        "dm": "Diabetes mellitus",
-                        "hf": "Heart failure",
-                        "cn": "Cancer",
-                        "ckd": "Chronic kidney disease",
-                    }
-                    for cond in conditions:
-                        st.checkbox(label=conditions[cond], key=cond)
+        To use the app, go to `Predict` section.
 
-        with col2:
-            X_input = format_input(
-                st.session_state,
-                [
-                    "age",
-                    "sex",
-                    "chronic_respiratory_disease",
-                    "diabetes_mellitus",
-                    "heart_failure",
-                    "cancer",
-                    "chronic_kidney_disease",
-                ],
+        To use them with your own datasets, see the
+        [documentation](https://datsudo.github.io/pneumonia-predictor/getting-started/model-usage/).
+
+        To set this web app locally, see `Local Setup` tab section.
+        """)
+
+    with tab2:
+        st.subheader("Local setup")
+        st.markdown("""
+        First, make sure you have the following prerequisites installed on your
+        machine:
+        - Python (3.12+)
+        - Poetry (1.8.3+) - for virtual environment setup
+
+        Clone this repository by running:
+        ```bash
+        git clone https://huggingface.co/spaces/datsudo/pneumonia-predictor
+        ```
+
+        Setup and enter the virtual environment using `poetry`:
+        ```bash
+        poetry install  # installs all the dependencies
+        poetry shell
+        ```
+
+        Start the web app using `streamlit`
+        ```bash
+        streamlit run app.py
+        ```
+
+        For more information about this project, check out the
+        [documentation](https://datsudo.github.io/pneumonia-predictor).
+        """)
+
+    with tab3:
+        with st.container(border=True):
+            st.subheader("Choose Model", divider=True)
+            st.radio(
+                "**Model**",
+                key="chosen_model",
+                options=["RfSMOTE", "RfActiveSMOTE"],
+                horizontal=True,
             )
 
-            if st.session_state.chosen_model == "Rf-SMOTE":
-                model = PREDICTOR_RF_SMOTE
-            else:
-                model = PREDICTOR_RF_ACTIVE_SMOTE
+        with st.container(border=True):
+            col1, col2 = st.columns(2)
 
-            predict(model, X_input)
+            with col1:
+                with st.container(border=True):
+                    st.subheader("Input Fields", divider=True)
+
+                    with st.container(border=True):
+                        st.number_input(
+                            "**Age** (must be between 18-65 years)",
+                            key="age",
+                            min_value=18,
+                            max_value=65,
+                        )
+                    with st.container(border=True):
+                        st.radio(
+                            "**Sex**",
+                            key="sex",
+                            options=["Male", "Female"],
+                            captions=["0", "1"],
+                            horizontal=True,
+                        )
+                    with st.container(border=True):
+                        st.write(
+                            "**Indicate whether the patient has any of the following conditions:**"
+                        )
+                        conditions = {
+                            "crd": "Chronic respiratory disease",
+                            "dm": "Diabetes mellitus",
+                            "hf": "Heart failure",
+                            "cn": "Cancer",
+                            "ckd": "Chronic kidney disease",
+                        }
+                        for cond in conditions:
+                            st.checkbox(label=conditions[cond], key=cond)
+
+            with col2:
+                X_input = format_input(
+                    st.session_state,
+                    [
+                        "age",
+                        "sex",
+                        "chronic_respiratory_disease",
+                        "diabetes_mellitus",
+                        "heart_failure",
+                        "cancer",
+                        "chronic_kidney_disease",
+                    ],
+                )
+
+                if st.session_state.chosen_model == "Rf-SMOTE":
+                    model = PREDICTOR_RF_SMOTE
+                else:
+                    model = PREDICTOR_RF_ACTIVE_SMOTE
+
+                predict(model, X_input)
 
 
 if __name__ == "__main__":
