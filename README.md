@@ -11,6 +11,10 @@ license: gpl-3.0
 
 <div align="center">
 
+
+<img src="./images/icon.png" alt="App icon" style="width: 100px;" />
+
+
 # Pneumonia Predictor
 
 [![License](https://img.shields.io/badge/License-GPL%20v3-5b940a?style=flat)](./LICENSE)
@@ -19,7 +23,7 @@ license: gpl-3.0
 
 </div>
 
-Documentation: https://datsudo.github.io/pneumonia-predictor/
+Documentation: <https://datsudo.github.io/pneumonia-predictor/>
 
 ## Setup
 
