@@ -17,7 +17,7 @@ Clone first the repository:
 git clone https://github.com/datsudo/pneumonia-predictor.git
 ```
 
-Then install the dependencies see [pyproject.toml](../../pyproject.toml):
+Then install the dependencies (see [pyproject.toml](https://github.com/datsudo/pneumonia-predictor/blob/main/pyproject.toml)):
 
 ```bash
 cd pneumonia-predictor

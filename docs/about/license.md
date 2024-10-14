@@ -3,7 +3,7 @@
     <h4>Version 3, 29 June 2007</h4>
 </div>
 
-Copyright (C) 2024  Darylle Villanueva
+Copyright (C) 2024  Villanueva, Juat, Malapit, Pardilla
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

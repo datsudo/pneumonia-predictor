@@ -10,7 +10,7 @@ For predictor, we provided two machine learning models:
 - `RfActiveSMOTE`, and
 - `RfSMOTE`
 
-To use them with your own datasets, see [usage](./getting-started/usage.md) page.
+To use them with your own datasets, see [usage](./getting-started/model-usage.md) page.
 
 The application is currently hosted at Hugging Face:
 <https://huggingface.co/spaces/datsudo/pneumonia-predictor>.
