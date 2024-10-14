@@ -44,9 +44,7 @@ class RfActiveSMOTE(ActiveSMOTE):
         # stores all synthetic samples throughout the iteration
         self.total_synthetic_samples = DataFrame()
 
-        # FIXME: Temporary
         self.current_ratio = sampling_ratio
-        self.update_sampratio_per_iter = update_sampratio_per_iter
 
         # For results
         self.init_stats()
@@ -68,10 +66,6 @@ class RfActiveSMOTE(ActiveSMOTE):
 
             self.uncertainty_sampling()
             self.diversity_sampling()
-
-            # FIXME: Temporary
-            if self.update_sampratio_per_iter:
-                self.current_ratio += self.current_ratio * 0.024625692695214109
 
             self.create_synthetic_samples(self.current_ratio)
             self.total_synthetic_samples = concat(
