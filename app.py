@@ -75,11 +75,14 @@ def main() -> None:
         page_title="Pneumonia Admission Predictor",
     )
 
+    c1, c2, c3 = st.columns(3)
+    with c2:
+        st.image("./images/icon.png", width=224)
+
     # header
     st.html(
         """
         <div align="center" style="margin-top: -25px;">
-            <img style="width: 100px;" src="https://i.imgur.com/d7yYRd8.png" alt="App icon">
             <h1>Pneumonia Admission Predictor</h1>
             <p style="font-style: italic; margin-top: -15px;">
                 Jan Maverick M. Juat, Dionmelle J. Pardilla
