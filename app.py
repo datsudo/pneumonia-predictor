@@ -60,10 +60,9 @@ def main() -> None:
 
                     with st.container(border=True):
                         st.number_input(
-                            "**Age** (must be between 18-65 years)",
+                            "**Age** (must be 18 years old and above)",
                             key="age",
                             min_value=18,
-                            max_value=65,
                         )
                     with st.container(border=True):
                         st.radio(
