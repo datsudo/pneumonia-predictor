@@ -45,7 +45,7 @@ def display_result(
     with st.container(border=True):
         st.markdown("#### Result Details")
         st.markdown(f"""
-        Based on the predictor model's result, there's a **{class_0_proba}%** probability
-        of high risk and **{class_1_proba}%** of low risk for pneumonia admission.
+        Based on the predictor model's result, there's a **{class_1_proba}%** probability
+        of high risk and **{class_0_proba}%** of low risk for pneumonia admission.
         """)
         st.bar_chart(result, y_label="Risk Percentage (%)", color=["#0f0"])
