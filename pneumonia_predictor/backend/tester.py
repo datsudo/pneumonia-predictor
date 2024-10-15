@@ -66,23 +66,7 @@ class ModelTester(Logger):
         )
         self.model_b_res["Average"] = self.model_b_res[self.metrics].mean(axis=1)
 
-        res = {
-            "Metrics": self.metrics,
-            str(self.model_a): [
-                self.model_a_res["accuracy"][0],
-                self.model_a_res["precision"][0],
-                self.model_a_res["recall"][0],
-                self.model_a_res["f1-score"][0],
-            ],
-            str(self.model_b): [
-                self.model_b_res["accuracy"][0],
-                self.model_b_res["precision"][0],
-                self.model_b_res["recall"][0],
-                self.model_b_res["f1-score"][0],
-            ],
-        }
-
-        self.compare_res = pd.DataFrame(res)
+        self.compare_res = pd.DataFrame({"Metrics": self.metrics})
         self.t_values, self.p_values = self.get_ttest_res()
         self.compare_res["t-value"] = self.t_values
         self.compare_res["p-value"] = self.p_values
