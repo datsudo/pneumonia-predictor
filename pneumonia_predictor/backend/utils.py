@@ -19,3 +19,29 @@ def save_figure(fig_id: str, fig_ext: str = "png", resolution: int = 300) -> Non
 
     fig_path = images_dir / f"{fig_id}.{fig_ext}"
     savefig(fig_path, format=fig_ext, dpi=resolution)
+
+
+def format_input(session, columns: list[str]) -> None:
+    user_input = [
+        session.age,
+        0 if session.sex == "Male" else 1,
+    ]
+    user_input.extend(
+        list(
+            map(
+                lambda x: 1 if x else 0,
+                [
+                    session.crd,
+                    session.dm,
+                    session.hf,
+                    session.cn,
+                    session.ckd,
+                ],
+            )
+        )
+    )
+    user_input = DataFrame(
+        [user_input],
+        columns=columns,
+    )
+    return user_input
