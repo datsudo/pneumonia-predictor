@@ -98,15 +98,13 @@ class RfActiveSMOTE(ActiveSMOTE):
             self.maj_class_stats[metric].append(
                 self.current_report[str(self.maj_class_val)][metric]
             )
-            self.weighted_avg[metric].append(
-                self.current_report["weighted avg"][metric]
-            )
+            self.macro_avg[metric].append(self.current_report["macro avg"][metric])
 
     def record_overall_res(self) -> None:
-        self.overall_weighted_avg = {
-            "precision": statistics.fmean(self.weighted_avg["precision"]),
-            "recall": statistics.fmean(self.weighted_avg["recall"]),
-            "f1-score": statistics.fmean(self.weighted_avg["f1-score"]),
+        self.overall_macro_avg = {
+            "precision": statistics.fmean(self.macro_avg["precision"]),
+            "recall": statistics.fmean(self.macro_avg["recall"]),
+            "f1-score": statistics.fmean(self.macro_avg["f1-score"]),
         }
         self.overall_accuracy = statistics.fmean(self.accuracy_stats)
 
@@ -132,7 +130,7 @@ class RfActiveSMOTE(ActiveSMOTE):
         stats = {
             "min": ["Minority Class", self.min_class_stats],
             "maj": ["Majority Class", self.maj_class_stats],
-            "avg": ["Weighted Average", self.weighted_avg],
+            "avg": ["Macro Average", self.macro_avg],
         }
         plt.title(stats[opt][0])
         for metric in stats[opt][1]:
@@ -145,7 +143,7 @@ class RfActiveSMOTE(ActiveSMOTE):
         self.total_synthetic_samples = DataFrame()
         self.min_class_stats = defaultdict(list)
         self.maj_class_stats = defaultdict(list)
-        self.weighted_avg = defaultdict(list)
+        self.macro_avg = defaultdict(list)
         self.accuracy_stats = []
 
     def save(self, model_name: str) -> None:
