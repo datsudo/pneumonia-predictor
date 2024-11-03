@@ -100,7 +100,7 @@ def main() -> None:
                     ],
                 )
 
-                if st.session_state.chosen_model == "Rf-SMOTE":
+                if st.session_state.chosen_model == "RfSMOTE":
                     model = PREDICTOR_RF_SMOTE
                 else:
                     model = PREDICTOR_RF_ACTIVE_SMOTE
