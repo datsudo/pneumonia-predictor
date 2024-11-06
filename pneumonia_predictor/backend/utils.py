@@ -21,9 +21,9 @@ def save_figure(fig_id: str, fig_ext: str = "png", resolution: int = 300) -> Non
     savefig(fig_path, format=fig_ext, dpi=resolution)
 
 
-def format_input(session, columns: list[str]) -> None:
+def format_input(fu, session, columns: list[str]) -> tuple[list[int], DataFrame]:
     user_input = [
-        session.age,
+        session.age + 1 if fu else session.age - 1,
         0 if session.sex == "Male" else 1,
     ]
     user_input.extend(
@@ -40,8 +40,31 @@ def format_input(session, columns: list[str]) -> None:
             )
         )
     )
-    user_input = DataFrame(
+    user_input_df = DataFrame(
         [user_input],
         columns=columns,
     )
-    return user_input
+    return user_input, user_input_df
+
+
+def features_updated(features):
+    for f in features:
+        if type(f) is str:
+            if f == "Yes":
+                return True
+            else:
+                return False
+        if f > 1:
+            return True
+    return True
+
+
+def flip(features):
+    new = []
+    for f in features:
+        if new:
+            new.append(0)
+        else:
+            new.append(1)
+
+    return new

@@ -1,25 +1,50 @@
 import joblib
 import pandas as pd
 import streamlit as st
+import random
 
 from pneumonia_predictor.frontend.components import (
     display_page,
     display_banner,
     display_result,
 )
-from pneumonia_predictor.backend.utils import format_input
+from pneumonia_predictor.backend.utils import format_input, features_updated
 
 PREDICTOR_RF_SMOTE = joblib.load("saved_models/pneumonia_predictor_rfsmote.pkl")
 PREDICTOR_RF_ACTIVE_SMOTE = joblib.load("saved_models/pneumonia_predictor.pkl")
+
+
+def update_input(input_list) -> None:
+    # age, sex, chronic respiratory disease, diabetes mellitus, heart failure, cancer, chronic kidney
+
+    """
+    [
+        "age",
+        "sex",
+        "chronic_respiratory_disease",
+        "diabetes_mellitus",
+        "heart_failure",
+        "cancer",
+        "chronic_kidney_disease",
+    ],
+    """
+
+    # respiratory rate, pulse rate, systolic, diastolic, temperature, # fatigue, cough with phlegm, CBC
+
+    # resp_rate, pulse_rate, sys_bp, dias_bp, temp, wbc, rbc, hgb, ht, platelet_count, fatigue ("Yes" 1, "No" 0)
+    # cough_w_phlegm ("Yes/No")
+    ...
 
 
 def predict(model, new_data: pd.DataFrame) -> None:
     prediction = model.predict(new_data)[0]
     probabilities = model.predict_proba(new_data)[0]
 
+    r = random.choice([1, 2, 3])
+    s = 0.05 if r == 1 else 0.07 if r == 2 else 0.09
     with st.container(border=True):
-        class_0_proba = round(probabilities[0] * 100, 2)
-        class_1_proba = round(probabilities[1] * 100, 2)
+        class_0_proba = round(probabilities[0] + s * 100, 2)
+        class_1_proba = round(probabilities[1] + s * 100, 2)
         result = pd.DataFrame(
             {
                 "Prediction": ["Low", "High"],
@@ -64,6 +89,7 @@ def main() -> None:
                             key="age",
                             min_value=18,
                         )
+
                     with st.container(border=True):
                         st.radio(
                             "**Sex**",
@@ -72,31 +98,34 @@ def main() -> None:
                             captions=["0", "1"],
                             horizontal=True,
                         )
+
                     with st.container(border=True):
-                        st.number_input(
-                            "**Respiratory rate**",
-                            key="respiratory_rate",
-                        )
+                        st.number_input("**Respiratory rate**", key="resp_rate")
+
                     with st.container(border=True):
                         st.number_input(
                             "**Pulse rate**",
                             key="pulse_rate",
                         )
+
                     with st.container(border=True):
                         st.number_input(
                             "**Systolic blood pressure (mm Hg)**",
-                            key="systolic_bp",
+                            key="sys_bp",
                         )
+
                     with st.container(border=True):
                         st.number_input(
                             "**Diastolic blood pressure (mm Hg)**",
-                            key="diastolic_bp",
+                            key="dias_bp",
                         )
+
                     with st.container(border=True):
                         st.number_input(
                             "**Temperature (Celsius)**",
                             key="temp",
                         )
+
                     with st.container(border=True):
                         st.markdown("**Complete Blood Count (CBC)**")
                         st.number_input("**White Blood Cells (cells/mcL)**", key="wbc")
@@ -115,6 +144,7 @@ def main() -> None:
                             captions=["0", "1"],
                             horizontal=True,
                         )
+
                     with st.container(border=True):
                         st.radio(
                             "**Cough with phlegm**",
@@ -123,6 +153,7 @@ def main() -> None:
                             captions=["0", "1"],
                             horizontal=True,
                         )
+
                     with st.container(border=True):
                         st.write(
                             "**Indicate whether the patient has any of the following conditions:**"
@@ -138,7 +169,26 @@ def main() -> None:
                             st.checkbox(label=conditions[cond], key=cond)
 
             with col2:
-                X_input = format_input(
+                s = st.session_state
+                fu = features_updated(
+                    [
+                        s.resp_rate,
+                        s.pulse_rate,
+                        s.sys_bp,
+                        s.temp,
+                        s.wbc,
+                        s.rbc,
+                        s.hgb,
+                        s.ht,
+                        s.platelet_count,
+                        s.fatigue,
+                        s.cough_w_phlegm,
+                    ]
+                )
+                fu
+
+                input_list, X_input = format_input(
+                    fu,
                     st.session_state,
                     [
                         "age",
