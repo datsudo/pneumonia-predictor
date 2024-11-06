@@ -73,6 +73,57 @@ def main() -> None:
                             horizontal=True,
                         )
                     with st.container(border=True):
+                        st.number_input(
+                            "**Respiratory rate**",
+                            key="respiratory_rate",
+                        )
+                    with st.container(border=True):
+                        st.number_input(
+                            "**Pulse rate**",
+                            key="pulse_rate",
+                        )
+                    with st.container(border=True):
+                        st.number_input(
+                            "**Systolic blood pressure (mm Hg)**",
+                            key="systolic_bp",
+                        )
+                    with st.container(border=True):
+                        st.number_input(
+                            "**Diastolic blood pressure (mm Hg)**",
+                            key="diastolic_bp",
+                        )
+                    with st.container(border=True):
+                        st.number_input(
+                            "**Temperature (Celsius)**",
+                            key="temp",
+                        )
+                    with st.container(border=True):
+                        st.markdown("**Complete Blood Count (CBC)**")
+                        st.number_input("**White Blood Cells (cells/mcL)**", key="wbc")
+                        st.number_input("**Red Blood Cells (cells/mcL)**", key="rbc")
+                        st.number_input("**Hemoglobin (HGB) (g/dL)**", key="hgb")
+                        st.number_input("**Hematocrit (HT) (%)**", key="ht")
+                        st.number_input(
+                            "**Platelet count (thousand/mm3)**", key="platelet_count"
+                        )
+
+                    with st.container(border=True):
+                        st.radio(
+                            "**Fatigue**",
+                            key="fatigue",
+                            options=["Yes", "No"],
+                            captions=["0", "1"],
+                            horizontal=True,
+                        )
+                    with st.container(border=True):
+                        st.radio(
+                            "**Cough with phlegm**",
+                            key="cough_w_phlegm",
+                            options=["Yes", "No"],
+                            captions=["0", "1"],
+                            horizontal=True,
+                        )
+                    with st.container(border=True):
                         st.write(
                             "**Indicate whether the patient has any of the following conditions:**"
                         )
