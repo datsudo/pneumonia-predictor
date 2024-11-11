@@ -1,10 +1,18 @@
 ## About this project
 
-This app helps predict the likelihood of hospital admission for patients with pneumonia based on the provided [features](#features). By analyzing key medical indicators and patient data, it provides healthcare professionals with insights to make more informed decisions, optimizing patient care and resource allocation.
+This app helps predict the likelihood of hospital admission for patients with
+pneumonia based on the provided [features](#features). By analyzing key medical
+indicators and patient data, it provides healthcare professionals with insights
+to make more informed decisions, optimizing patient care and resource
+allocation.
 
-> *This application is designed for patients or healthcare professionals who have knowledge of the patient's existing comorbidities. If you are unsure about any of these factors, please seek guidance from a medical professional.*
+> *This application is designed for patients or healthcare professionals who
+> have knowledge of the patient's existing comorbidities. If you are unsure
+> about any of these factors, please seek guidance from a medical professional.*
 >
-> *For any confusions, this application does not predict the occurrence of pneumonia but rather assesses the likelihood of a patient being admitted due to pneumonia.*
+> *For any confusions, this application does not predict the occurrence of
+> pneumonia but rather assesses the likelihood of a patient being admitted due
+> to pneumonia.*
 
 For predictor, we provided two machine learning models:
 
@@ -20,24 +28,63 @@ To set this web app locally, see `Local Setup` tab section.
 
 ### Features
 The selected features that the model uses for prediction are based on the
-meta-analysis conducted by Fang et al. in their paper "Risk factors for
-hospital readmissions in pneumonia patients: A systematic review and
-meta-analysis" (2022).[^1] From the 17 studies that they reviewed, here are
-resulting features:
+meta-analysis conducted by Fang et al. in their paper "Risk factors for hospital
+readmissions in pneumonia patients: A systematic review and meta-analysis"
+(2022).[^1] From the 17 studies that they reviewed, here are resulting features:
 
-- **age**: age of the patient, restricted to individuals above 18 years old; three studies reported that pneumonia patients aged 65+ years has odds ratio (OR) of 0.90, which indicates that the said group have 0.90 times the risk of being readmitted compared to other age bracket
-- **sex**: biological sex of the patient, classified as male or female; thirteen studies shows that males have 1.19 times higher odds of having readmission compared to female.
-- **chronic respiratory disease**: presence of any chronic respiratory condition, including but not limited to asthma, chronic obstructive pulmonary disease (COPD), or other long-term respiratory disorders; ten studies show that patients with chronic respiratory disease have significantly higher odds (with 1.37 OR) of having readmission than those who do not have it
-- **diabetes mellitus**: presence of any type of diabetes mellitus, including Type 1 or Type 2 diabetes; seven studies reported that diabetes patients have 1.18 times higher odds of having hospital readmissions compared to non-diabetes patients
-- **heart failure**: presence of any form of heart failure, whether acute or chronic; nine studies reported that patients with heart failure have 1.28 times higher odds of having readmissions compared to patients without heart failure
-- **cancer**: presence of any type of cancer, whether in remission or active; patients with cancer have higher odds, with 1.94 OR, of having readmissions compared to patients without cancer
-- **chronic kidney disease**: presence of any form of chronic kidney disease, including stages 1 to 5 or those undergoing dialysis; five studies show that patients with chronic kidney disease have 1.38 times higher odds of having hospital readmissions compared to patients without the said disease
+- **age**: age of the patient, restricted to individuals above 18 years old;
+  three studies reported that pneumonia patients aged 65+ years has odds ratio
+  (OR) of 0.90, which indicates that the said group have 0.90 times the risk of
+  being readmitted compared to other age bracket
+- **sex**: biological sex of the patient, classified as male or female; thirteen
+  studies shows that males have 1.19 times higher odds of having readmission
+  compared to female.
+- **chronic respiratory disease**: presence of any chronic respiratory
+  condition, including but not limited to asthma, chronic obstructive pulmonary
+  disease (COPD), or other long-term respiratory disorders; ten studies show
+  that patients with chronic respiratory disease have significantly higher odds
+  (with 1.37 OR) of having readmission than those who do not have it
+- **diabetes mellitus**: presence of any type of diabetes mellitus, including
+  Type 1 or Type 2 diabetes; seven studies reported that diabetes patients have
+  1.18 times higher odds of having hospital readmissions compared to
+  non-diabetes patients
+- **heart failure**: presence of any form of heart failure, whether acute or
+  chronic; nine studies reported that patients with heart failure have 1.28
+  times higher odds of having readmissions compared to patients without heart
+  failure
+- **cancer**: presence of any type of cancer, whether in remission or active;
+  patients with cancer have higher odds, with 1.94 OR, of having readmissions
+  compared to patients without cancer
+- **chronic kidney disease**: presence of any form of chronic kidney disease,
+  including stages 1 to 5 or those undergoing dialysis; five studies show that
+  patients with chronic kidney disease have 1.38 times higher odds of having
+  hospital readmissions compared to patients without the said disease
+
+Addition to these are the vital signs based on the clinical guidelines, and
+symptoms of pneumonia by Institute for Quality and Efficiency in Healthcare
+(2021)[^2]:
+
+- respiratory rate,
+- pulse rate,
+- systolic blood pressure,
+- diastolic blood pressure,
+- temperature,
+- fatigue,
+- cough with phlegm, and
+- complete blood count (CBC) which composes of white and red blood cells (WBC,
+  RBC) hemoglobin (HGB), hematocrit (HT), and platelet count
 
 ### Feature importance
 
-Below are the feature importance graphs generated by our pre-trained models that shows how much each feature impacts their decision. Both model shows that *age* plays a significant role in their predictions. The rest of the features have mostly the same level of significance.
+Below are the feature importance graphs generated by our pre-trained models that
+shows how much each feature impacts their decision. Both model shows that *age*
+plays a significant role in their predictions. The rest of the features have
+mostly the same level of significance.
 
-For calculating the importance, we used **mean decrease in impurity** (MDI) or **Gini importance**. MDI measures how often a feature is used in the decision tree and how many samples are affected by those splits.[^2] The more a feature is used to split large groups of data, the more important it’s considered.
+For calculating the importance, we used **mean decrease in impurity** (MDI) or
+**Gini importance**. MDI measures how often a feature is used in the decision
+tree and how many samples are affected by those splits.[^3] The more a feature
+is used to split large groups of data, the more important it’s considered.
 
 ---
 
@@ -55,5 +102,12 @@ For calculating the importance, we used **mean decrease in impurity** (MDI) or *
 
 
 
-[^1]: Fang, Y.-Y., Ni, J.-C., Wang, Y., Yu, J.-H., & Fu, L.-L. (2022). *Risk factors for hospital readmissions in pneumonia patients: A systematic review and meta-analysis*. World Journal of Clinical Cases, 10(12), 3787–3800. https://doi.org/10.12998/wjcc.v10.i12.3787
-[^2]: Lee, Ceshine. (2017). *Feature Importance Measures for Tree Models - Part I*. Medium. https://medium.com/the-artificial-impostor/feature-importance-measures-for-tree-models-part-i-47f187c1a2c3
+[^1]: Fang, Y.-Y., Ni, J.-C., Wang, Y., Yu, J.-H., & Fu, L.-L. (2022). *Risk
+    factors for hospital readmissions in pneumonia patients: A systematic review
+    and meta-analysis*. World Journal of Clinical Cases, 10(12), 3787–3800.
+    https://doi.org/10.12998/wjcc.v10.i12.3787
+[^2]: Institute for Quality and Efficiency in Health Care (2021). *Overview:
+    Pneumonia*. https://www.ncbi.nlm.nih.gov/books/NBK525774/
+[^3]: Lee, Ceshine. (2017). *Feature Importance Measures for Tree Models - Part
+    I*. Medium.
+    https://medium.com/the-artificial-impostor/feature-importance-measures-for-tree-models-part-i-47f187c1a2c3
