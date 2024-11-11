@@ -28,24 +28,29 @@ def display_result(
     prediction: int, result: pd.DataFrame, class_0_proba: float, class_1_proba: float
 ) -> None:
     st.subheader("Result", divider=True)
-    if prediction == 0:
-        st.success(":green[**LOW RISK**]")
-        st.success("""
-        You are at low risk for pneumonia admission. Keep monitoring your health
-        and follow preventive measures to stay well.
-        """)
-    else:
-        st.error("**HIGH RISK**")
-        st.error("""
-        Based on your information, you are at high risk for pneumonia admission.
-        Please consult with your healthcare provider for further evaluation and
-        guidance.
-        """)
 
-    with st.container(border=True):
-        st.markdown("#### Result Details")
-        st.markdown(f"""
-        Based on the predictor model's result, there's a **{class_1_proba}%** probability
-        of admission due to pneumonia.
-        """)
-        st.bar_chart(result, y_label="Risk Percentage (%)", color=["#0f0"])
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if prediction == 0:
+            st.success(":green[**LOW RISK**]")
+            st.success("""
+            You are at low risk for pneumonia admission. Keep monitoring your health
+            and follow preventive measures to stay well.
+            """)
+        else:
+            st.error("**HIGH RISK**")
+            st.error("""
+            Based on your information, you are at high risk for pneumonia admission.
+            Please consult with your healthcare provider for further evaluation and
+            guidance.
+            """)
+
+    with col2:
+        with st.container(border=True):
+            st.markdown("#### Result Details")
+            st.markdown(f"""
+            Based on the predictor model's result, there's a **{class_1_proba}%** probability
+            of admission due to pneumonia.
+            """)
+            st.bar_chart(result, y_label="Risk Percentage (%)", color=["#0f0"])
