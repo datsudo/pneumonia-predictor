@@ -15,6 +15,7 @@ matplotlib = "^3.9.2"
 joblib = "^1.4.2"
 scipy = "^1.14.1"
 mkdocs-material = "^9.5.40"
+altair = "^5.5.0"
 
 
 [tool.poetry.group.dev.dependencies]

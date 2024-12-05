@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+import altair as alt
 
 PAGES_DIR = "pneumonia_predictor/frontend/pages"
 
@@ -29,28 +30,36 @@ def display_result(
 ) -> None:
     st.subheader("Result", divider=True)
 
-    col1, col2 = st.columns(2)
+    if prediction == 0:
+        st.success(":green[**LOW RISK**]")
+        st.success("""
+        You are at low risk for pneumonia admission. Keep monitoring your health
+        and follow preventive measures to stay well.
+        """)
+    else:
+        st.error("**HIGH RISK**")
+        st.error("""
+        Based on your information, you are at high risk for pneumonia admission.
+        Please consult with your healthcare provider for further evaluation and
+        guidance.
+        """)
 
-    with col1:
-        if prediction == 0:
-            st.success(":green[**LOW RISK**]")
-            st.success("""
-            You are at low risk for pneumonia admission. Keep monitoring your health
-            and follow preventive measures to stay well.
-            """)
-        else:
-            st.error("**HIGH RISK**")
-            st.error("""
-            Based on your information, you are at high risk for pneumonia admission.
-            Please consult with your healthcare provider for further evaluation and
-            guidance.
-            """)
+    with st.container(border=True):
+        st.markdown("#### Result Details")
+        st.markdown(f"""
+        Based on the predictor model's result, there's a **{class_1_proba}%** probability
+        of admission due to pneumonia.
+        """)
 
-    with col2:
-        with st.container(border=True):
-            st.markdown("#### Result Details")
-            st.markdown(f"""
-            Based on the predictor model's result, there's a **{class_1_proba}%** probability
-            of admission due to pneumonia.
-            """)
-            st.bar_chart(result, y_label="Risk Percentage (%)", color=["#0f0"])
+        result["color"] = ["#00FF00", "#FF0000"]
+        chart = (
+            alt.Chart(result)
+            .mark_bar()
+            .encode(
+                y=alt.Y("Prediction", type="nominal"),
+                x=alt.X("Percentage", type="quantitative"),
+                color=alt.Color("color", type="nominal", scale=None, legend=None),
+            )
+        )
+
+        st.altair_chart(chart, use_container_width=True)

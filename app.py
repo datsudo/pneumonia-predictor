@@ -1,14 +1,13 @@
 import joblib
 import pandas as pd
 import streamlit as st
-import random
 
 from pneumonia_predictor.frontend.components import (
     display_page,
     display_banner,
     display_result,
 )
-from pneumonia_predictor.backend.utils import format_input, features_updated
+from pneumonia_predictor.backend.utils import format_input
 
 PREDICTOR_RF_SMOTE = joblib.load("saved_models/pneumonia_predictor_rfsmote.pkl")
 PREDICTOR_RF_ACTIVE_SMOTE = joblib.load("saved_models/pneumonia_predictor.pkl")
@@ -24,9 +23,9 @@ def predict(model, new_data: pd.DataFrame) -> None:
         result = pd.DataFrame(
             {
                 "Prediction": ["Low", "High"],
-                "Percentage (%)": [class_0_proba, class_1_proba],
+                "Percentage": [class_0_proba, class_1_proba],
             }
-        ).set_index("Prediction")
+        )
 
         display_result(prediction, result, class_0_proba, class_1_proba)
 
@@ -169,7 +168,7 @@ def main() -> None:
                     "rbc",
                     "wbc",
                     "platelets",
-                ]
+                ],
             )
 
             if st.session_state.chosen_model == "RfSMOTE":
