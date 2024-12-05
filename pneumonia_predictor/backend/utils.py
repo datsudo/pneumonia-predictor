@@ -21,25 +21,34 @@ def save_figure(fig_id: str, fig_ext: str = "png", resolution: int = 300) -> Non
     savefig(fig_path, format=fig_ext, dpi=resolution)
 
 
-def format_input(fu, session, columns: list[str]) -> tuple[list[int], DataFrame]:
-    user_input = [
-        session.age + 1 if fu else session.age - 1,
-        0 if session.sex == "Male" else 1,
+def format_input(session, columns: list[str]) -> tuple[list[int], DataFrame]:
+    bool_feat = [
+        session.crd,
+        session.ckd,
+        session.dm,
+        session.hf,
+        session.cn,
     ]
+    cough_phlegm = {
+        "No": 0,
+        "Yes, dry cough": 1,
+        "Yes, with phlegm": 2,
+    }
+
+    user_input = [
+        session.age,
+        1 if session.sex == "Male" else 0,
+        1 if session.ftg else 0,
+        cough_phlegm[session.cough],
+    ]
+    user_input.extend(list(map(lambda x: 1 if x else 0, bool_feat)))
     user_input.extend(
-        list(
-            map(
-                lambda x: 1 if x else 0,
-                [
-                    session.crd,
-                    session.dm,
-                    session.hf,
-                    session.cn,
-                    session.ckd,
-                ],
-            )
-        )
+        [
+            session.sys_bp, session.dias_bp, session.pulse_rate, session.resp_rate,
+            session.temp, session.hgb, session.ht, session.rbc, session.wbc, session.platelet_count
+        ]
     )
+
     user_input_df = DataFrame(
         [user_input],
         columns=columns,
