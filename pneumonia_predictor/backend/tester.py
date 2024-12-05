@@ -26,23 +26,24 @@ class ModelTester(Logger):
 
             self.log("op", f"Training Started: {str(self.model_a)}")
             self.model_a.train()
-            self.a_tests_arr.append(self.parse_res_per_test(self.model_a, t))
+            self.a_tests_arr.append(self.parse_res_per_test(self.model_a, t, "a"))
 
             self.log("inf", f"Training Started: {str(self.model_b)}")
             self.model_b.train()
-            self.b_tests_arr.append(self.parse_res_per_test(self.model_b, t))
+            self.b_tests_arr.append(self.parse_res_per_test(self.model_b, t, "b"))
 
             self.store_res_per_metric()
 
         self.generate_final_res()
 
-    def parse_res_per_test(self, model, n_test: int) -> list[float]:
+    def parse_res_per_test(self, model_class, n_test: int, model: str) -> list[float]:
+        avg = model_class.overall_weighted_avg if model == "a" else model_class.overall_macro_avg
         test_res_arr = [
             n_test + 1,
-            model.overall_accuracy,
-            model.overall_weighted_avg["precision"],
-            model.overall_weighted_avg["recall"],
-            model.overall_weighted_avg["f1-score"],
+            model_class.overall_accuracy,
+            avg["precision"],
+            avg["recall"],
+            avg["f1-score"],
         ]
         return test_res_arr
 
@@ -53,7 +54,7 @@ class ModelTester(Logger):
                 self.b_tests_per_metric[m].append(self.model_b.overall_accuracy)
             else:
                 self.a_tests_per_metric[m].append(self.model_a.overall_weighted_avg[m])
-                self.b_tests_per_metric[m].append(self.model_b.overall_weighted_avg[m])
+                self.b_tests_per_metric[m].append(self.model_b.overall_macro_avg[m])
 
     def generate_final_res(self) -> None:
         self.model_a_res = pd.DataFrame(
