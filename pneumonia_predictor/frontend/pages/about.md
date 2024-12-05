@@ -90,13 +90,13 @@ is used to split large groups of data, the more important it’s considered.
 
 **RfActiveSMOTE**:
 
-![RfActiveSMOTE feature importance](https://i.imgur.com/ZFpCxTW.png)
+![RfActiveSMOTE feature importance](https://i.imgur.com/FMWIPBZ.png)
 
 ---
 
 **RfSMOTE**:
 
-![RfSMOTE](https://i.imgur.com/ZJY7EMz.png)
+![RfSMOTE](https://i.imgur.com/g8PX6ae.png)
 
 ---
 
