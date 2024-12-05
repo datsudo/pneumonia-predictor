@@ -29,7 +29,6 @@ class RfActiveSMOTE(ActiveSMOTE):
         num_est: int = N_ESTIMATORS,
         num_clusters: int = N_CLUSTERS,
         sampling_ratio: float = SAMPLING_RATIO,
-        update_sampratio_per_iter: bool = False,
     ) -> None:
         self.probabilities = []
 

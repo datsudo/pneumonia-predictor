@@ -26,7 +26,7 @@ class Logger:
 
     def raise_error(self, message: str) -> None:
         output = f"[{self.get_curr_datetime}][ERROR]: {message}. Exiting...\n"
-        self.update_log(output)
+        self.update_logfile(output)
         exit(output)
 
     def log_operation(self, message: str) -> None:

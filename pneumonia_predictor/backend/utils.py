@@ -61,7 +61,7 @@ def features_updated(features):
 
 def flip(features):
     new = []
-    for f in features:
+    for _ in features:
         if new:
             new.append(0)
         else:
