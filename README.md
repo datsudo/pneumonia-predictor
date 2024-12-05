@@ -29,7 +29,7 @@ Documentation: <https://datsudo.github.io/pneumonia-predictor/>
 
 Install the following prerequisites:
 
-1. [Python 3.12+](https://www.python.org/downloads/)
+1. [Python 3.12](https://www.python.org/downloads/)
 2. [Poetry (for dependency management)](https://python-poetry.org/docs/#installation)
 
 Make sure that poetry is installed by running:
