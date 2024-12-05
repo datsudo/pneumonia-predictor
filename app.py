@@ -18,11 +18,9 @@ def predict(model, new_data: pd.DataFrame) -> None:
     prediction = model.predict(new_data)[0]
     probabilities = model.predict_proba(new_data)[0]
 
-    r = random.choice([1, 2, 3])
-    s = 0.05 if r == 1 else 0.07 if r == 2 else 0.09
     with st.container(border=True):
-        class_0_proba = round(probabilities[0] + s * 100, 2)
-        class_1_proba = round(probabilities[1] + s * 100, 2)
+        class_0_proba = round(probabilities[0] * 100, 2)
+        class_1_proba = round(probabilities[1] * 100, 2)
         result = pd.DataFrame(
             {
                 "Prediction": ["Low", "High"],
@@ -72,7 +70,7 @@ def main() -> None:
                             "**Sex**",
                             key="sex",
                             options=["Male", "Female"],
-                            captions=["0", "1"],
+                            captions=["1", "0"],
                             horizontal=True,
                         )
 
@@ -112,83 +110,66 @@ def main() -> None:
 
                     row4col1, row4col2, row4col3 = st.columns(3)
                     with row4col1:
-                        st.number_input("**White Blood Cells (cells/mcL)**", key="wbc")
+                        st.number_input("**White Blood Cells (g/L)**", key="wbc")
                     with row4col2:
-                        st.number_input("**Red Blood Cells (cells/mcL)**", key="rbc")
+                        st.number_input("**Red Blood Cells (g/L)**", key="rbc")
                     with row4col3:
-                        st.number_input("**Hemoglobin (HGB) (g/dL)**", key="hgb")
+                        st.number_input("**Hemoglobin (HGB) (g/L)**", key="hgb")
 
                     row5col1, row5col2 = st.columns(2)
                     with row5col1:
                         st.number_input("**Hematocrit (HT) (%)**", key="ht")
                     with row5col2:
                         st.number_input(
-                            "**Platelet count (thousand/mm3)**", key="platelet_count"
+                            "**Platelet count (g/L)**", key="platelet_count"
                         )
 
-                row6col1, row6col2 = st.columns(2)
-                with row6col1:
-                    with st.container(border=True):
-                        st.radio(
-                            "**Fatigue**",
-                            key="fatigue",
-                            options=["Yes", "No"],
-                            captions=["0", "1"],
-                            horizontal=True,
-                        )
+                with st.container(border=True):
+                    st.radio(
+                        "**Do you have a cough**",
+                        key="cough",
+                        options=["No", "Yes, dry cough", "Yes, with phlegm"],
+                        captions=["0", "1", "2"],
+                        horizontal=True,
+                    )
+                with st.container(border=True):
+                    st.write(
+                        "**Indicate whether the patient has any of the following conditions:**"
+                    )
+                    conditions = {
+                        "crd": "Chronic respiratory disease",
+                        "dm": "Diabetes mellitus",
+                        "hf": "Heart failure",
+                        "cn": "Cancer",
+                        "ckd": "Chronic kidney disease",
+                        "ftg": "Fatigue",
+                    }
+                    for cond in conditions:
+                        st.checkbox(label=conditions[cond], key=cond)
 
-                    with st.container(border=True):
-                        st.radio(
-                            "**Cough with phlegm**",
-                            key="cough_w_phlegm",
-                            options=["Yes", "No"],
-                            captions=["0", "1"],
-                            horizontal=True,
-                        )
-                with row6col2:
-                    with st.container(border=True):
-                        st.write(
-                            "**Indicate whether the patient has any of the following conditions:**"
-                        )
-                        conditions = {
-                            "crd": "Chronic respiratory disease",
-                            "dm": "Diabetes mellitus",
-                            "hf": "Heart failure",
-                            "cn": "Cancer",
-                            "ckd": "Chronic kidney disease",
-                        }
-                        for cond in conditions:
-                            st.checkbox(label=conditions[cond], key=cond)
-
-            s = st.session_state
-            updated_list = features_updated(
-                [
-                    s.resp_rate,
-                    s.pulse_rate,
-                    s.sys_bp,
-                    s.temp,
-                    s.wbc,
-                    s.rbc,
-                    s.hgb,
-                    s.ht,
-                    s.platelet_count,
-                    s.fatigue,
-                    s.cough_w_phlegm,
-                ]
-            )
-
-            input_list, X_input = format_input(
-                updated_list,
+            _, X_input = format_input(
                 st.session_state,
                 [
                     "age",
                     "sex",
-                    "chronic_respiratory_disease",
+                    "fatigue",
+                    "cough_phlegm",
+                    "chronic_resp_disease",
+                    "chronic_kidney_disease",
                     "diabetes_mellitus",
                     "heart_failure",
                     "cancer",
-                    "chronic_kidney_disease",
-                ],
+                    "systoic_bp",
+                    "dias_bp",
+                    "pulse_rate",
+                    "resp_rate",
+                    "temp",
+                    "hemoglobin",
+                    "hematocrit",
+                    "rbc",
+                    "wbc",
+                    "platelets",
+                ]
             )
 
             if st.session_state.chosen_model == "RfSMOTE":

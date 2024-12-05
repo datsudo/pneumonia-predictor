@@ -104,5 +104,5 @@ class RfSMOTE(Logger):
         joblib.dump(self.classifier, f"{SAVED_MODELS_PATH}/{model_name}.pkl")
         self.log("inf", f"Pickle {model_name}.pkl saved at ./{SAVED_MODELS_PATH}")
 
-    def __str__(self) -> None:
+    def __str__(self) -> str:
         return "Random Forest + SMOTE Model"
