@@ -22,8 +22,6 @@ class ModelTester(Logger):
 
         for t in range(num_tests):
             # Reset stats of both models
-            self.model_a.init_stats()
-            self.model_b.init_stats()
             self.model_b.X_train_resampled = self.model_b.X_train.copy()
             self.model_b.y_train_resampled = self.model_b.y_train.copy()
 
