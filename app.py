@@ -124,18 +124,12 @@ def main() -> None:
                         )
 
                 with st.container(border=True):
-                    st.radio(
-                        "**Do you have a cough**",
-                        key="cough",
-                        options=["No", "Yes, dry cough", "Yes, with phlegm"],
-                        captions=["0", "1", "2"],
-                        horizontal=True,
-                    )
-                with st.container(border=True):
                     st.write(
                         "**Indicate whether the patient has any of the following conditions:**"
                     )
                     conditions = {
+                        "cgh": "Dry Cough",
+                        "phlm": "Cough with Phlegm",
                         "crd": "Chronic respiratory disease",
                         "dm": "Diabetes mellitus",
                         "hf": "Heart failure",
@@ -155,19 +149,20 @@ def main() -> None:
                     "cough_phlegm",
                     "chronic_resp_disease",
                     "chronic_kidney_disease",
-                    "diabetes_mellitus",
                     "heart_failure",
                     "cancer",
                     "systoic_bp",
                     "dias_bp",
                     "pulse_rate",
                     "resp_rate",
-                    "temp",
+                    "diabetes_mellitus",
                     "hemoglobin",
+                    "platelets",
+                    "cough",
+                    "temp",
                     "hematocrit",
                     "rbc",
                     "wbc",
-                    "platelets",
                 ],
             )
 

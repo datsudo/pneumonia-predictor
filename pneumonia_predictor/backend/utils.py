@@ -25,21 +25,15 @@ def format_input(session, columns: list[str]) -> tuple[list[int], DataFrame]:
     bool_feat = [
         session.crd,
         session.ckd,
-        session.dm,
         session.hf,
         session.cn,
     ]
-    cough_phlegm = {
-        "No": 0,
-        "Yes, dry cough": 1,
-        "Yes, with phlegm": 2,
-    }
 
     user_input = [
         session.age,
         1 if session.sex == "Male" else 0,
         1 if session.ftg else 0,
-        cough_phlegm[session.cough],
+        1 if session.phlm else 0,
     ]
     user_input.extend(list(map(lambda x: 1 if x else 0, bool_feat)))
     user_input.extend(
@@ -48,12 +42,14 @@ def format_input(session, columns: list[str]) -> tuple[list[int], DataFrame]:
             session.dias_bp,
             session.pulse_rate,
             session.resp_rate,
-            session.temp,
+            1 if session.dm else 0,
             session.hgb,
+            session.platelet_count,
+            1 if session.cgh else 0,
+            session.temp,
             session.ht,
             session.rbc,
             session.wbc,
-            session.platelet_count,
         ]
     )
 
