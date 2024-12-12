@@ -1,6 +1,6 @@
 from collections import Counter
 
-from imblearn.over_sampling import SMOTE
+from imblearn.over_sampling import SMOTENC
 from numpy import ndarray
 from pandas import DataFrame, concat
 from sklearn.cluster import KMeans
@@ -15,6 +15,7 @@ class ActiveSMOTE(logger.Logger):
         y_train: DataFrame,
         probabilities: ndarray,
         target_name: str,
+        categ_features: list[int],
         num_clusters: int = 4,
     ) -> None:
         super().__init__()
@@ -22,6 +23,7 @@ class ActiveSMOTE(logger.Logger):
         self.X_train = X_train.copy()
         self.y_train = y_train.copy()
         self.target_name = target_name
+        self.categ_features = categ_features
         self.probabilities = probabilities
         self.maj_class_val = y_train.value_counts().idxmax()[0]
         self.min_class_val = y_train.value_counts().idxmin()[0]
@@ -76,7 +78,9 @@ class ActiveSMOTE(logger.Logger):
         )
         self.log("inf", f"SMOTE sampling ratio: {sampling_ratio}")
 
-        self.smote = SMOTE(sampling_strategy=sampling_ratio)
+        self.smote = SMOTENC(
+            sampling_strategy=sampling_ratio, categorical_features=self.categ_features
+        )
 
         y_diverse_arr = self.y_diverse[self.target_name].to_numpy().astype(int)
         self.log("op", "Running SMOTE.fit_resample")

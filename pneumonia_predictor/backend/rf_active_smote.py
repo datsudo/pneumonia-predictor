@@ -26,6 +26,7 @@ class RfActiveSMOTE(ActiveSMOTE):
         X_test: DataFrame,
         y_test: DataFrame,
         target_name: str,
+        categ_features: list[str],
         num_est: int = N_ESTIMATORS,
         num_clusters: int = N_CLUSTERS,
         sampling_ratio: float = SAMPLING_RATIO,
@@ -33,7 +34,12 @@ class RfActiveSMOTE(ActiveSMOTE):
         self.probabilities = []
 
         super().__init__(
-            X_train, y_train, self.probabilities, target_name, num_clusters
+            X_train,
+            y_train,
+            self.probabilities,
+            target_name,
+            categ_features,
+            num_clusters,
         )
 
         self.X_test = X_test
