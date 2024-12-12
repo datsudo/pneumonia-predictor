@@ -2,7 +2,7 @@ from collections import Counter
 from pathlib import Path
 
 import joblib
-from imblearn.over_sampling import SMOTE
+from imblearn.over_sampling import SMOTENC
 from pandas import DataFrame, concat
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
@@ -19,11 +19,13 @@ class RfSMOTE(Logger):
         X_test: DataFrame,
         y_test: DataFrame,
         target_name: str,
+        categ_features: list[int],
         num_est: int = N_ESTIMATORS,
     ) -> None:
         super().__init__()
 
         self.target_name = target_name
+        self.categ_features = categ_features
         self.X_train = X_train
         self.y_train = y_train
         self.X_test = X_test
@@ -36,7 +38,9 @@ class RfSMOTE(Logger):
         self.min_class_val = y_train.value_counts().idxmin()[0]
 
         self.classifier = RandomForestClassifier(n_estimators=num_est, random_state=42)
-        self.smote = SMOTE(sampling_strategy="not majority")
+        self.smote = SMOTENC(
+            sampling_strategy="not majority", categorical_features=self.categ_features
+        )
 
     def train(self) -> None:
         self.log("sep", "=")

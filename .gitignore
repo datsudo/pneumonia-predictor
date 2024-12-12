@@ -20,6 +20,8 @@ logs.txt
 
 # datasets
 .parquet
+CMH_DS*.csv
+raw_*.csv
 
 # docs
 site/

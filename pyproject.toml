@@ -16,6 +16,7 @@ joblib = "^1.4.2"
 scipy = "^1.14.1"
 mkdocs-material = "^9.5.40"
 altair = "^5.5.0"
+seaborn = "^0.13.2"
 
 
 [tool.poetry.group.dev.dependencies]
