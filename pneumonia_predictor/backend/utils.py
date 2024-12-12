@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from matplotlib.pyplot import savefig
+import matplotlib.pyplot as plt
 from pandas import DataFrame
 
 
@@ -18,7 +18,7 @@ def save_figure(fig_id: str, fig_ext: str = "png", resolution: int = 300) -> Non
     images_dir.mkdir(parents=True, exist_ok=True)
 
     fig_path = images_dir / f"{fig_id}.{fig_ext}"
-    savefig(fig_path, format=fig_ext, dpi=resolution)
+    plt.savefig(fig_path, format=fig_ext, dpi=resolution)
 
 
 def format_input(session, columns: list[str]) -> tuple[list[int], DataFrame]:
@@ -44,8 +44,16 @@ def format_input(session, columns: list[str]) -> tuple[list[int], DataFrame]:
     user_input.extend(list(map(lambda x: 1 if x else 0, bool_feat)))
     user_input.extend(
         [
-            session.sys_bp, session.dias_bp, session.pulse_rate, session.resp_rate,
-            session.temp, session.hgb, session.ht, session.rbc, session.wbc, session.platelet_count
+            session.sys_bp,
+            session.dias_bp,
+            session.pulse_rate,
+            session.resp_rate,
+            session.temp,
+            session.hgb,
+            session.ht,
+            session.rbc,
+            session.wbc,
+            session.platelet_count,
         ]
     )
 
@@ -77,3 +85,21 @@ def flip(features):
             new.append(1)
 
     return new
+
+
+def check_distribution(
+    df: DataFrame, target: str, title: str, class_a: str, class_b: str
+) -> None:
+    pneumonia_counts = df[target].value_counts()
+
+    plt.figure(figsize=(6, 6))
+    pneumonia_counts.plot.pie(
+        autopct="%1.1f%%",
+        labels=[f"{class_a} (0)", f"{class_b} (1)"],
+        colors=["skyblue", "salmon"],
+        startangle=90,
+        explode=[0, 0.1],
+    )
+    plt.title(title)
+    plt.ylabel("")
+    plt.show()
