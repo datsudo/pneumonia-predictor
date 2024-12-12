@@ -21,6 +21,12 @@ class ModelTester(Logger):
         self.b_tests_per_metric = defaultdict(list)
 
         for t in range(num_tests):
+            # Reset stats of both models
+            self.model_a.init_stats()
+            self.model_b.init_stats()
+            self.model_b.X_train_resampled = self.model_b.X_train.copy()
+            self.model_b.y_train_resampled = self.model_b.y_train.copy()
+
             self.log("sep", "=")
             self.log("inf", f"STARTING TEST {t + 1}")
 
@@ -37,7 +43,11 @@ class ModelTester(Logger):
         self.generate_final_res()
 
     def parse_res_per_test(self, model_class, n_test: int, model: str) -> list[float]:
-        avg = model_class.overall_weighted_avg if model == "a" else model_class.overall_macro_avg
+        avg = (
+            model_class.overall_weighted_avg
+            if model == "a"
+            else model_class.overall_macro_avg
+        )
         test_res_arr = [
             n_test + 1,
             model_class.overall_accuracy,
