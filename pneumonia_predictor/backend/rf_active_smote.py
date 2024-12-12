@@ -98,10 +98,10 @@ class RfActiveSMOTE(ActiveSMOTE):
         self.accuracy_stats.append(self.current_report["accuracy"])
         for metric in ["precision", "recall", "f1-score"]:
             self.min_class_stats[metric].append(
-                self.current_report[str(self.min_class_val)][metric]
+                self.current_report[str(float(self.min_class_val))][metric]
             )
             self.maj_class_stats[metric].append(
-                self.current_report[str(self.maj_class_val)][metric]
+                self.current_report[str(float(self.maj_class_val))][metric]
             )
             self.macro_avg[metric].append(self.current_report["macro avg"][metric])
 
