@@ -37,7 +37,7 @@ class ActiveSMOTE(logger.Logger):
 
         self.create_min_maj_sets()
 
-    def uncertainty_sampling(self, min_sample_frac: float = 0.5) -> None:
+    def uncertainty_sampling(self, min_sample_frac: float = 0.25) -> None:
         """This creates uncertainty set, as well as a separate set for data under
         minority class and minority samples
         """
@@ -158,7 +158,7 @@ class ActiveSMOTE(logger.Logger):
         self.diverse_min_set = DataFrame()
         for n_cluster in range(self.num_clusters):
             target_n_samples = int(
-                0.5
+                0.20
                 * len(self.clustered_set[self.clustered_set["cluster"] == n_cluster])
             )
             sampled_data = self.clustered_set[
