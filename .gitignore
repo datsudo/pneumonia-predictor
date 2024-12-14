@@ -25,3 +25,5 @@ raw_*.csv
 
 # docs
 site/
+
+.envrc
